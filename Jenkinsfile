@@ -52,7 +52,7 @@ pipeline {
                 script {
                     sh '''
                         # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
-                        curl -s http://localhost:8083/api/v1/casts/docs > /dev/null
+                        curl -s http://cast_service:8000/api/v1/casts > /dev/null
                     '''
                 }
             }
@@ -63,7 +63,7 @@ pipeline {
                 script {
                     sh '''
                         # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
-                        curl -s http://localhost:8082/api/v1/movies/docs > /dev/null
+                        curl -s http://movie_service:8000/api/v1/movies > /dev/null
                     '''
                 }
             }
