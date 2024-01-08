@@ -7,6 +7,8 @@ pipeline {
         KUBECONFIG = credentials("config")
         DOCKER_HUB_PASS = credentials("DOCKER_HUB_PASS")  
         PATH="$PATH:~/.local/bin/"
+        MOVIE_CONTAINER_NAME = "movie-service-${BUILD_ID}"
+        CAST_CONTAINER_NAME = "cast-service-${BUILD_ID}"
 
     }
 
@@ -39,9 +41,9 @@ pipeline {
                 steps {
                     script {
                     sh '''
-                    docker run -d --name ${CONTAINER_ID} -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
+                    docker run -d --name ${MOVIE_CONTAINER_NAME} -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
                     sleep 10
-                    docker run -d --name ${CONTAINER_ID} -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
+                    docker run -d --name ${CAST_CONTAINER_NAME} -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
                     sleep 10
                     '''
                     }
