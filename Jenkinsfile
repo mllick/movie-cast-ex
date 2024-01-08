@@ -35,6 +35,18 @@ pipeline {
                 }
             }
         }
+        stage('Docker run'){ // run container from our builded image
+                steps {
+                    script {
+                    sh '''
+                    docker run -d --name movie-service -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
+                    sleep 10
+                    docker run -d --name cast-service -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
+                    sleep 10
+                    '''
+                    }
+                }
+            }
 
         stage('Docker Push') {
             steps {
