@@ -39,13 +39,9 @@ pipeline {
                 steps {
                     script {
                     sh '''
-                    docker stop movie-service || true
-                    docker rm movie-service || true
-                    docker run -d --name movie-service -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
+                    docker run -d --name ${CONTAINER_ID} -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
                     sleep 10
-                    docker stop cast-service || true
-                    docker rm cast-service || true
-                    docker run -d --name cast-service -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
+                    docker run -d --name ${CONTAINER_ID} -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
                     sleep 10
                     '''
                     }
@@ -56,7 +52,7 @@ pipeline {
                 script {
                     sh '''
                         # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
-                        curl -s http://cast_service:8000/api/v1/casts > /dev/null
+                        curl -s http://localhost:8080/api/v1/cast/docs > /dev/null
                     '''
                 }
             }
@@ -67,7 +63,7 @@ pipeline {
                 script {
                     sh '''
                         # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
-                        curl -s http://movie_service:8000/api/v1/movies > /dev/null
+                        curl -s http://localhost:8080/api/v1/movies/docs > /dev/null
                     '''
                 }
             }
