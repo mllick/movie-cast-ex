@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-service
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: movie-service
+  template:
+    metadata:
+      labels:
+        app: movie-service
+    spec:
+      containers:
+      - name: movie-service
+        image: "{{ .Values.movie_service.image.repository }}:{{ .Values.movie_service.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.movie_service.service.port }}
+        env:
+        - name: DATABASE_URI
+          value: "{{ .Values.movie_service.databaseUri }}"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cast-service
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: cast-service
+  template:
+    metadata:
+      labels:
+        app: cast-service
+    spec:
+      containers:
+      - name: cast-service
+        image: "{{ .Values.cast_service.image.repository }}:{{ .Values.cast_service.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.cast_service.service.port }}
+        env:
+        - name: DATABASE_URI
+          value: "{{ .Values.cast_service.databaseUri }}"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: "{{ .Values.nginx_service.image.repository }}:{{ .Values.nginx_service.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.nginx_service.service.port }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "postgres-data-cast"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres_data.storage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "postgres-data-movie"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres_data.storage }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-cast-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-cast-db
+  template:
+    metadata:
+      labels:
+        app: postgres-cast-db
+    spec:
+      containers:
+      - name: postgres-cast-db
+        image: "{{ .Values.postgres_service.image.repository }}:{{ .Values.postgres_service.image.tag }}"
+        env:
+        - name: POSTGRES_DB
+          value: cast_db_dev
+        - name: POSTGRES_PASSWORD
+          value: cast_db_password
+        - name: POSTGRES_USER
+          value: cast_db_username
+        ports:
+        - containerPort: {{ .Values.postgres_service.service.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-movie-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-movie-db
+  template:
+    metadata:
+      labels:
+        app: postgres-movie-db
+    spec:
+      containers:
+      - name: postgres-movie-db
+        image: "{{ .Values.postgres_service.image.repository }}:{{ .Values.postgres_service.image.tag }}"
+        env:
+        - name: POSTGRES_DB
+          value: movie_db_dev
+        - name: POSTGRES_PASSWORD
+          value: movie_db_password
+        - name: POSTGRES_USER
+          value: movie_db_username
+        ports:
+        - containerPort: {{ .Values.postgres_service.service.port }}

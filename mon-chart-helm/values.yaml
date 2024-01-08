@@ -1,0 +1,51 @@
+cast_service:
+  name: "cast-service"
+  tag: "v.1.0"
+  image:
+    repository: "sarrlick/cast-service"
+    tag: "v.1.0"
+  service:
+    name: "cast-service"
+    port: 8000
+  databaseUri: "postgresql://cast_db_username:cast_db_password@cast_db/cast_db_dev"
+  postgres_data:
+    storage: 100Mi
+    pvc_name: "postgres-data-cast"
+
+movie_service:
+  name: "movie-service"
+  tag: "v.1.0"
+  image:
+    repository: "sarrlick/movie-service"
+    tag: "v.1.0"
+  service:
+    name: "movie-service"
+    port: 8000
+  databaseUri: "postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev"
+  postgres_data:
+    storage: 100Mi
+    pvc_name: "postgres-data-movie"
+
+nginx_service:
+  name: "nginx"
+  tag: "latest"
+  image:
+    repository: "nginx"
+    tag: "latest"
+  service:
+    name: "nginx"
+    port: 8081
+
+postgres_service:
+  name: "postgres"
+  tag: "12.1-alpine"
+  image:
+    repository: "postgres"
+    tag: "12.1-alpine"
+  service:
+    name: "postgres"
+    port: 5432
+
+
+postgres_data:
+  storage: 100Mi
