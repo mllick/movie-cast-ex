@@ -91,7 +91,7 @@ pipeline {
         }
             }
         }
-        stage('Clean Up Cast Service') {
+        stage('Clean Up Cast Service to Dev Environment') {
             steps {
                 script {
                     sh '''
@@ -136,7 +136,7 @@ pipeline {
                 }
             }
         }
-        stage('Clean Up Cast Service to Staging Environment') {
+        stage('Clean Up Cast Service to QA Environment') {
             steps {
                 script {
                     sh '''
