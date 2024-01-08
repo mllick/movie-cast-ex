@@ -39,8 +39,12 @@ pipeline {
                 steps {
                     script {
                     sh '''
+                    docker stop movie-service || true
+                    docker rm movie-service || true
                     docker run -d --name movie-service -p 8082:8080 ${DOCKER_ID}/movie-service:${DOCKER_TAG}
                     sleep 10
+                    docker stop cast-service || true
+                    docker rm cast-service || true
                     docker run -d --name cast-service -p 8083:8080 ${DOCKER_ID}/cast-service:${DOCKER_TAG}
                     sleep 10
                     '''
