@@ -86,7 +86,7 @@ pipeline {
                 script {
                 sh '''
                     cp mon-chart-helm/values.yaml values.yml
-                    helm upgrade --install cast-service-dev ./mon-chart-helm --values=./mon-chart-helm/values.yml --namespace dev
+                    helm upgrade --install cast-service-dev ./mon-chart-helm --values=values.yml --namespace dev
                 '''
         }
             }
