@@ -47,7 +47,27 @@ pipeline {
                     }
                 }
             }
+        stage('Acceptance Tests Cast Service Dev') {
+            steps {
+                script {
+                    sh '''
+                        # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
+                        curl -s http://localhost:8083/api/v1/casts/docs > /dev/null
+                    '''
+                }
+            }
+        }
 
+        stage('Acceptance Tests Movie Service Dev') {
+            steps {
+                script {
+                    sh '''
+                        # Utilisez curl pour accéder à la documentation Swagger/OpenAPI
+                        curl -s http://localhost:8082/api/v1/movies/docs > /dev/null
+                    '''
+                }
+            }
+        }
         stage('Docker Push') {
             steps {
                 script {
